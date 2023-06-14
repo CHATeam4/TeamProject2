@@ -8,7 +8,7 @@ import gensim
 class PreprocessW2V:
     def __init__(self, userdic=None):
         # 단어 인덱스 사전 불러오기
-        model = gensim.models.Word2Vec.load('ko_with_corpus_mc1.model')
+        model = gensim.models.Word2Vec.load('ko_with_corpus_mc1_menu_added.model')
         self.word_index = model.wv.key_to_index #w2v모델에 있는 단어사전의 인덱스셋을 불러옴
 
         # 형태소 분석기 초기화

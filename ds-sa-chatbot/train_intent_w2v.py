@@ -62,7 +62,7 @@ EPOCH = 5
 VOCAB_SIZE = len(p.word_index) + 1 #전체 단어 개수
 
 #####Added Code#######
-kv = gensim.models.Word2Vec.load('ko_with_corpus_mc1.model')
+kv = gensim.models.Word2Vec.load('ko_with_corpus_mc1_menu_added.model')
 
 ## setting Embeddings
 embeddings = np.zeros((VOCAB_SIZE, EMB_SIZE))
