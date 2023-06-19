@@ -22,7 +22,7 @@ intents = data['intent'].tolist()
 
 
 from utils.PreprocessW2V import PreprocessW2V as Preprocess
-p = Preprocess(userdic='utils/user_dic.tsv')
+p = Preprocess(w2v_model='ko_with_corpus_mc1_menu_added.kv',userdic='utils/user_dic.txt')
 
 # 단어 시퀀스 생성
 sequences = []
@@ -63,6 +63,7 @@ VOCAB_SIZE = len(p.word_index) + 1 #전체 단어 개수
 
 #####Added Code#######
 kv = gensim.models.Word2Vec.load('ko_with_corpus_mc1_menu_added.model')
+print('W2V model size:', kv.wv.vectors.shape)
 
 ## setting Embeddings
 embeddings = np.zeros((VOCAB_SIZE, EMB_SIZE))

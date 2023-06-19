@@ -1,3 +1,6 @@
+#copurs.txt 파일을 ko.kv파일에 반영하는 업데이트 파일입니다. 
+#min_count 값이 1로 잡혀있어 성능이 낮은 대신 어휘 풀이 넓습니다.
+
 # 필요한 모듈 임포트
 import pandas as pd
 import tensorflow as tf
@@ -24,7 +27,7 @@ corpus_data = read_corpus_data('./train_tools/dict/corpus.txt')
 
 from utils.Preprocess import Preprocess
 p = Preprocess(word2index_dic='train_tools/dict/chatbot_dict.bin',
-               userdic='utils/user_dic.tsv')
+               userdic='utils/user_dic.txt')
 
 keywords=[]
 for sentence in corpus_data:

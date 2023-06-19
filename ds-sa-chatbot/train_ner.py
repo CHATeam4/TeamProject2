@@ -21,8 +21,7 @@ def read_file(file_name):
                 this_sent.append(tuple(l.split()))
     return sents
 
-p = Preprocess(word2index_dic='train_tools/dict/chatbot_dict.bin',
-               userdic='utils/user_dic.tsv')
+p = Preprocess(userdic='utils/user_dic.txt')
 
 # 학습용 말뭉치 데이터를 불러옴
 corpus = read_file('models/ner/'+'ner_train.txt')
@@ -69,10 +68,20 @@ max_len = 40
 x_train = preprocessing.sequence.pad_sequences(x_train, padding='post', maxlen=max_len)
 y_train = preprocessing.sequence.pad_sequences(y_train, padding='post', maxlen=max_len)
 
+ratio_total=np.unique(y_train, return_counts = True)[1]
+
 # 학습 데이터와 테스트 데이터를 8:2의 비율로 분리
 x_train, x_test, y_train, y_test = train_test_split(x_train, y_train,
                                                     test_size=.2,
                                                     random_state=1234)
+
+ratio_train=np.unique(y_train, return_counts = True)[1]
+ratio_test=np.unique(y_test, return_counts = True)[1]
+print('train:', ratio_train/ratio_total)
+print('test:', ratio_test/ratio_total)
+
+
+
 
 # 출력 데이터를 one-hot encoding
 y_train = tf.keras.utils.to_categorical(y_train, num_classes=tag_size)

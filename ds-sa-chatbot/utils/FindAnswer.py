@@ -13,7 +13,8 @@ class FindAnswer:
             if (len(ner_tags) > 0):
                 where += 'and ('
                 for ne in ner_tags:
-                    where += " ner like '%{}%' or ".format(ne)
+                    if ne!='O': #'O'인 경우는 제외
+                        where += " ner like '%{}%' or ".format(ne)
                 where = where[:-3] + ')'
             sql = sql + where
 
@@ -32,7 +33,7 @@ class FindAnswer:
             sql = self._make_query(intent_name, None)
             answer = self.db.select_one(sql)
 
-        return (answer['answer'], answer['answer_image'])
+        return (answer['answer'], answer['answer_code'])
 
     # NER 태그를 실제 입력된 단어로 변환
     def tag_to_word(self, ner_predicts, answer):

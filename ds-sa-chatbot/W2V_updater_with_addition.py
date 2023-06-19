@@ -29,7 +29,9 @@ csvfile=open(train_file, newline='')
 rdr = csv.reader(csvfile, delimiter=';')
 
 from utils.PreprocessW2V import PreprocessW2V as Preprocess
-p = Preprocess(userdic='utils/user_dic.tsv')
+p = Preprocess(w2v_model='ko_with_corpus_mc1.model', userdic='utils/user_dic.txt')
+
+print('model_size_from:', kv.vectors.shape)
 
 words=[]
 vectors=[]
@@ -39,7 +41,7 @@ mode=0 #mode가 0이면 kv 멕시코를 더하지 않음, 1이면 멕시코를 �
 for word, sentence in rdr:
     if word=='phase': #중간저장을 통해 여태 학습한 단어를 다음 단어들에 사용 가능하도록 반영, mode변환,
         mode=1
-        kv.add_vectors(words, vectors)
+        kv.add_vectors(words, vectors, replace=True)
         words=[]
         vectors=[]
     else:            
@@ -59,15 +61,15 @@ for word, sentence in rdr:
             vector=softmax(kv['멕시코']*0.1+tmp)
         else:
             vector=softmax(tmp)
-        newwords.append(word) #결과 관찰용 리스트
+        #newwords.append(word) #결과 관찰용 리스트
         words.append(word)
         vectors.append(vector)
-kv.add_vectors(words, vectors)
+kv.add_vectors(words, vectors, replace=True)
 csvfile.close()
 
 #결과 출력(결과 관찰용)
 #for word in newwords:
 #    print(word, kv.most_similar(word, topn=10))
-
-md.save('ko_with_corpus_mc1_menu_added.model')
+print('model_size_to:', kv.vectors.shape)
+kv.save('ko_with_corpus_mc1_menu_added.kv')
 print('update complete')
