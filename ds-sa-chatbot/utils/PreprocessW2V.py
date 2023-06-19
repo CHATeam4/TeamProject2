@@ -6,14 +6,21 @@ import jpype
 import gensim
 
 class PreprocessW2V:
-    def __init__(self, userdic=None):
+    def __init__(self, w2v_model='ko_with_corpus_mc1.model', userdic=None):
         # 단어 인덱스 사전 불러오기
-        model = gensim.models.Word2Vec.load('ko_with_corpus_mc1_menu_added.model')
-        self.word_index = model.wv.key_to_index #w2v모델에 있는 단어사전의 인덱스셋을 불러옴
-
+        print('modelname:',w2v_model)
+        if w2v_model.split('.')[1]=='model':
+            model = gensim.models.Word2Vec.load(w2v_model)
+            self.word_index = model.wv.key_to_index #w2v모델에 있는 단어사전의 인덱스셋을 불러옴
+        elif w2v_model.split('.')[1]=='kv':
+            model = gensim.models.keyedvectors.KeyedVectors.load(w2v_model)
+            self.word_index = model.key_to_index #w2v모델에 있는 단어사전의 인덱스셋을 불러옴
+        else:
+            print('Error')
+            self.word_index=[]
         # 형태소 분석기 초기화
         self.komoran = Komoran(userdic=userdic)
-
+        
         # 제외할 품사
         # 참조 : https://docs.komoran.kr/firststep/postypes.html
         # 관계언 제거, 기호 제거

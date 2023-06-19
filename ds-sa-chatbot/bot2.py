@@ -11,7 +11,7 @@ from utils.FindAnswer import FindAnswer
 
 
 # 전처리 객체 생성
-p = Preprocess(userdic='utils/user_dic.tsv')
+p = Preprocess(w2v_model='ko_with_corpus_mc1_menu_added.kv', userdic='utils/user_dic.txt')
 
 # 의도 파악 모델
 intent = IntentModel(model_name='models/intent/intent_w2v_model.h5', proprocess=p)
@@ -54,17 +54,19 @@ def to_client(conn, addr, params):
         # 답변 검색
         try:
             f = FindAnswer(db)
-            answer_text, answer_image = f.search(intent_name, ner_tags)
+            answer_text, answer_image, answer_code = f.search(intent_name, ner_tags)
             answer = f.tag_to_word(ner_predicts, answer_text)
 
         except:
             answer = "죄송해요 무슨 말인지 모르겠어요. 조금 더 공부 할게요."
             answer_image = None
+            answer_code = None
 
         send_json_data_str = {
             "Query" : query,
             "Answer": answer,
             "AnswerImageUrl" : answer_image,
+            "AnswerCode" : answer_code,
             "Intent": intent_name,
             "NER": str(ner_predicts)
         }

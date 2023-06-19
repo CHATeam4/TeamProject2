@@ -18,7 +18,7 @@ intents = data['intent'].tolist()
 
 from utils.Preprocess import Preprocess
 p = Preprocess(word2index_dic='train_tools/dict/chatbot_dict.bin',
-               userdic='utils/user_dic.tsv')
+               userdic='utils/user_dic.txt')
 
 # 단어 시퀀스 생성
 sequences = []
