@@ -8,10 +8,9 @@ class NerModel:
     def __init__(self, proprocess):
 
         # NER 태그 사전 불러오기
-        with open('ner2021.json', 'r') as f:
+        with open('models/ner/ner2021_compressed.json', 'r') as f:
             self.nerdict = json.load(f)
-        #print(json.dumps(self.nerdict) )
-
+        
         # 챗봇 Preprocess 객체
         self.p = proprocess
 
@@ -25,7 +24,7 @@ class NerModel:
         tags = []
         for word in keywords:
             if word in self.nerdict.keys():
-                tags.append(self.nerdict[word]['label'])
+                tags.append(self.nerdict[word])
             else:
                 tags.append('O')
 
