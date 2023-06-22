@@ -20,7 +20,7 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 
 from utils.PreprocessW2V import PreprocessW2V as Preprocess
-from models.ner.NerModel_New import NerModel
+from models.ner.NerModel import NerModel
 #from models.intent.IntentModel import IntentModel
 from models.intent.IntentModel_New import IntentModel
 
@@ -33,7 +33,7 @@ p = Preprocess(w2v_model='ko_with_corpus_mc1_menu_added.kv', userdic='utils/user
 intent = IntentModel(proprocess=p)
 
 # 개체명 인식 모델
-ner = NerModel(proprocess=p)
+ner = NerModel(model_name='models/ner/ner_model2.h5', proprocess=p)
 
 # 학습 파일 불러오기
 def read_file(file_name):
@@ -135,10 +135,4 @@ def intent_test():
         
     f.close()
     print('result:',cnt,'per',data.shape[0], '=',1 - cnt/data.shape[0])
-
-def ner_test():
-    print(p.pos("부리또 주문할게요"))
-    print(ner.predict("부리또 주문할게요"))
-
 intent_test()
-#ner_test()
