@@ -2,46 +2,62 @@
 <html>
 
 <head>
-    <title>메뉴 안내</title>
     <style>
-      h2 {
-          margin-top: 22px;
-          color: black; /* 글자 색상을 여기에 입력하세요 */
-      }
+        h2 {
+            margin-top: 22px;
+            color: black; /* 글자 색상을 여기에 입력하세요 */
+        }
 
-      h3 {
-          margin-top: 20px;
-          color: black; /* 글자 색상을 여기에 입력하세요 */
-      }
-  
-      ul {
-          list-style-type: none;
-          padding: 0;
-      }
-  
-      li {
-          margin-bottom: 10px;
-          color: black; /* 글자 색상을 여기에 입력하세요 */
-          font-size: 17px;
-      }
+        h3 {
+            margin-top: 20px;
+            color: black; /* 글자 색상을 여기에 입력하세요 */
+        }
 
-      .chat-log {
-          background-image: none;
-      }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
 
-      .Back {
-        position: absolute; /* 절대 위치 설정 */
-        top: 15px; /* 원하는 버튼의 상단 여백 조정 */
-        right: 520px; /* 원하는 버튼의 우측 여백 조정 */
-        font-size: 12px;
-        width: 70px; /* 원하는 버튼 너비로 조정 */
-        height: 20px; /* 원하는 버튼 높이로 조정 */
-        background-color: white;
-        margin-bottom: 10px;
-        text-align: center;
-      }
-  </style>
-  
+        li {
+            margin-bottom: 10px;
+            color: black; /* 글자 색상을 여기에 입력하세요 */
+            font-size: 17px;
+        }
+
+        .chat-log {
+            background-image: none;
+        }
+
+        .Back {
+            position: absolute; /* 절대 위치 설정 */
+            top: 15px; /* 원하는 버튼의 상단 여백 조정 */
+            right: 520px; /* 원하는 버튼의 우측 여백 조정 */
+            font-size: 12px;
+            width: 70px; /* 원하는 버튼 너비로 조정 */
+            height: 20px; /* 원하는 버튼 높이로 조정 */
+            background-color: white;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .image-container {
+            text-align: center;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .image-container img{
+            max-width: 500px;
+            height: auto;
+        }
+
+        .chat-container {
+            text-align: center;
+        }
+
+    </style>
+
 </head>
 
 <body style="background-color: ivory;">
@@ -49,19 +65,13 @@
     <div class="chat-container">
         <h2>커플 추천 메뉴</h2>
 
-        <h3>페이버릿 초이스 (Favorite Choice)</h3>
-        <ul>
-            <li>얼티밋 화이타 &nbsp;&nbsp;&nbsp;&nbsp;54,9000<br>(The Ultimate Fajita)</li>
-            <li>보더 샘플러 &nbsp;&nbsp;&nbsp;&nbsp;45,500<br>Border Sampler</li>
-            <li>더블 스텍 클럽 퀘사디아 &nbsp;&nbsp;&nbsp;&nbsp;39,500<br>Double Stacked Club Quesadillas</li>
-            <li>랜칠라다 &nbsp;&nbsp;&nbsp;&nbsp;53,900<br>Ranchiladas</li>
-            <li>립아이 스테이크 & 쉬림프 &nbsp;&nbsp;&nbsp;&nbsp;79,500<br>Rib-eye Steak & Shrimps</li>
-            <li>시즐링 화이타 샐러드 &nbsp;&nbsp;&nbsp;&nbsp;33,500<br>Sizzling Fajita Salad</li>
-        </ul>
+        <div class="image-container">
+            <img src="aset.png" alt="aset 이미지">
+            <img src="bset.png" alt="bset 이미지">
+        </div>
 
         <button class="Back" onclick="window.location.href='index.html'">홈으로</button>
     </div>
 </body>
-
 
 </html>

@@ -49,11 +49,26 @@
         function confirmReservation() {
             var name = document.getElementById("name").value;
             var guests = document.getElementById("guests").value;
+            var phone = document.getElementById("phone").value;
             var time = document.getElementById("time").value;
+
+            if (name === "") {
+                alert("성함을 입력 해주세요");
+                return;
+            }
+            else if (guests === "") {
+                alert("인원수를 입력 해주세요");
+                return;
+            }
+            else if (phone === "") {
+                alert("전화번호를 입력 해주세요");
+                return;
+            }
             
             var message = "예약이 완료되었습니다!\n\n";
             message += "예약자: " + name + "\n";
             message += "인원 수: " + guests + "\n";
+            message += "전화번호: " + phone + "\n";
             message += "예약 시간: " + time + "\n";
             
             alert(message);
@@ -65,4 +80,5 @@
     </script>
 </body>
 </html>
+
 
