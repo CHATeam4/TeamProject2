@@ -8,7 +8,7 @@ from utils.PreprocessW2V import PreprocessW2V as Preprocess
 from models.intent.IntentModel_New import IntentModel
 from models.ner.NerModel_New import NerModel
 from utils.FindAnswer import FindAnswer
-
+from customer import Customer
 
 # 전처리 객체 생성
 p = Preprocess(w2v_model='ko_with_corpus_mc1_menu_added.kv', userdic='utils/user_dic.txt')
@@ -16,9 +16,14 @@ p = Preprocess(w2v_model='ko_with_corpus_mc1_menu_added.kv', userdic='utils/user
 # 개체명 인식 모델
 ner = NerModel(proprocess=p)
 
-# 의도 파악 모델
-intent = IntentModel(proprocess=p, nermodel=ner, customer=None)
+cust=Customer()
 
+# 의도 파악 모델
+intent = IntentModel(proprocess=p, nermodel=ner, customer=cust)
+
+wordtonum={
+    "두":2, "세":3, "네":4,"다섯":5,"여섯":6,"일곱":7,"여덟":8,"아홉":9,"열":10
+}
 
 
 def to_client(conn, addr, params):
@@ -49,14 +54,102 @@ def to_client(conn, addr, params):
 
         # 개체명 파악
         ner_predicts = ner.predict(query)
-        ner_tags = ner.predict_tags(query)
 
 
         # 답변 검색
         try:
             f = FindAnswer(db)
-            answer_text, answer_code = f.search(intent_name, ner_tags)
-            answer = f.tag_to_word(ner_predicts, answer_text)
+            answer, answer_code = f.search(intent_name, ner_predicts)
+            if answer_code=="11":
+                answer=''
+                tempbag=[]
+                for word, tag in ner_predicts:
+                    if checker==1 and tag=="QT":
+                        if word in wordtonum.keys():
+                            num=wordtonum[word]
+                        else:
+                            num=1
+                        cust.put_item(word, num)
+                        answer+=word+' '+str(num)+', '
+                    else:
+                        cust.put_item(word, 1)
+                        answer+=word+', '
+                    checker=0
+
+                    if word in intent.submenu:
+                        tempbag=word
+                        checker=1
+                if checker==1:
+                    cust.put_item(word, 1)
+                    answer+=word+' '+str(num)+', '
+   
+                if len(tempbag)!=0:
+                    answer=answer[:-2]+" 장바구니에 넣었습니다."
+                else:
+                    answer = "죄송합니다. 저희 매장에는 없는 메뉴입니다."
+            if answer_code=="12":
+                tempbag=[]
+                for word, tag in ner_predicts:
+                    if word in cust.bag:
+                        cust.cancel_item(word)
+                        tempbag.append(word)
+                if len(tempbag)!=0:
+                    answer=''
+                    for word in tempbag:
+                        answer+=word+', '
+                    answer=answer[:-2]+" 장바구니에서 제외되었습니다."
+                else:
+                    answer = "해당 메뉴는 장바구니에 없습니다."
+            if answer_code=='4':
+                if intent_name=="메뉴안내":
+                    search_done=0
+                    for word, tag in ner_predicts:
+                        if word in intent.submenu:
+                            for cat in intent.menu.values():
+                                for exactmenu in cat:
+                                    if exactmenu['name']==word and search_done==0:
+                                        answer=exactmenu['text']
+                                        search_done=1
+                                        break
+                    
+                    if search_done==0:
+                        answer = "죄송해요 무슨 말인지 모르겠어요. 조금 더 공부 할게요."
+                else:
+                    answer=f.match_answer(tagword, intent_name, ner_predicts)
+                if tagword=="가깝":
+                    answer="여기서 가장 가까운 매장은 코엑스 도심공항점입니다."
+            
+            if answer_code=='3':
+                answer, mod_menu=f.show_menu(tagword, intent.menu)
+
+            if answer_code=='1':
+                if tagword in ['취소', '못하', '미루', '미루워', '캔슬', '조정']:
+                    if len(cust.reservation)==0:
+                        answer=="취소할 수 있는 예약이 없습니다."
+                    else: 
+                        time, person= f.timeandperson(ner_predicts)
+                        answer="해당 시간에 잡힌 예약이 없습니다."
+                        for reserv in cust.reservation:
+                            if reserv[0]==time:
+                                cust.cancel_reserv(time)
+                                answer==f"{time}시 예약을 취소하였습니다."
+                else:
+                    answer=''
+                    time, person= f.timeandperson(ner_predicts)
+                    if time!=None and person!=None:
+                        answer+=time+'시 '+person+'명 예약합니다.'
+                        cust.reserv(time, person)
+                    else:
+                        answer="예약창으로 이동합니다. 나머지 정보를 채워주십시오."
+
+            #예약 내역 보여주기
+
+
+                    
+
+
+
+
 
         except:
             answer = "죄송해요 무슨 말인지 모르겠어요. 조금 더 공부 할게요."

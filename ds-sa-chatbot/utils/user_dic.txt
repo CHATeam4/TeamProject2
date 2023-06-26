@@ -471,3 +471,31 @@ OTB 블랑코 퀘소 버거	NNG
 혼밥	NNG
 비밀번호	NNG
 아이디	NNG
+애버랜드점	NNG
+에버랜드	NNG
+애버랜드	NNG
+광명AK	NNG
+광명	NNG
+AK점	NNG
+현대백화점중동점	NNG
+현대백화점 중동	NNG
+부천점	NNG
+치폴레 화이타치킨 싸이	NNG
+슈페리어	NNG
+토마토 함박 스테이크 & 필라프	NNG
+치킨 텐더	NNG
+비어버켓 피쉬 & 칩스 세트	NNG
+비어버켓 빅플래터 세트	NNG
+D 패밀리 세트	NNG
+C 패밀리 세트	NNG
+B 커플 세트	NNG
+A 커플 세트	NNG
+아이스크림	NNG
+와인	NNG
+수신거부	NNG
+고객만족도	NNG
+기념일	NNG
+생일	NNG
+쿠폰	NNG
+재결제	NNG
+상품권	NNG
