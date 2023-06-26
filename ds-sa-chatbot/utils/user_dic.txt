@@ -463,3 +463,11 @@ OTB 블랑코 퀘소 버거	NNG
 무알콜음료	NNG
 콥 샐러드	NNG
 소고기	NNG
+커플 세트 B	NNG
+방문 주문	NNG
+방문 포장	NNG
+구아카몰라이브	NNG
+치폴레화이타치킨싸이	NNG
+혼밥	NNG
+비밀번호	NNG
+아이디	NNG

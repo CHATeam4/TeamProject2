@@ -1,150 +1,38 @@
-import matplotlib.pyplot as plt
-import tensorflow as tf
-from tensorflow.keras import preprocessing
-from sklearn.model_selection import train_test_split
-import numpy as np
-from utils.PreprocessW2V import PreprocessW2V as Preprocess
+# -*- coding: utf-8 -*- 
+import json
+import csv
 
-import gensim
+# NER 태그 사전 불러오기
+with open('ds-sa-chatbot-priv/chatbot/ds-sa-chatbot/models/ner/ner2021.json', 'r', encoding='utf-8-sig') as f:
+    nerdict = json.load(f)
+    #print(json.dumps(self.nerdict) )
+    newdict = {}
+    for word in nerdict['document']:
+        w = word['form']
+        l = word['ne'][0]['label']
+        newdict[w]=l
 
+##### 추가사전 및 정정 #####
+oov=['주문', '먹', '까', '파', '굴', '쉐리', '펄', '창', '죽']
+food=['구아카몰라이브', '치폴레화이타치킨싸이','마라탕','바나나', '사과', '샤브샤브', '핫소스', '플레터', '샘플러', '초밥', '뇨끼', '짜장면', '라자냐', '치킨', '피자', '캐밥', '카레', '김치찌개', '돈까스', '꿔바로우', '타코샐러드', '파히타', '찜닭', '수박', '메인메뉴', '소고기', '돈가스', 'A세트', 'B세트', '쉬림프', '소세지','수제버거', '라이스', '타코', '부리또', '세트메뉴', '화이타', '햄버거', '버거', '세트', '플레터', '빅 플래터', '보더 샘플러', '허니 치폴레 쉬림프', '프리타스 피쉬 & 칩스', '보더윙', '구아카몰 라이브', '엠파나다', '구아카몰 볼', '퀘소볼', '샐러드', '그릴드 멕시칸 콘', '그릴드멕시칸콘', '시즐링 화이타 샐러드', '타코 샐러드', '콥샐러드', '하우스샐러드', '하우스 샐러드', '보더볼', '스프', '비프 타코 라이스', '쉬림프 & 소시지 포솔레', '치킨 또띠아 수프', '스테이크', '립아이 스테이크 & 쉬림프', '메가 쉬림프 화이타', '콰트로 하이타', '콰트로 화이타', '커플 세트 B', '텍사스 바비큐 폭립', '얼티밋 화이타', '치폴레 화이타_치킨 싸이', '치폴레 화이타 치킨 싸이', '치폴레 화이타', '몬트레이 랜치 치킨 화이타', '메스퀴드 그릴 화이타', '퀘사디아', '랜칠라다', '더블 스텍 클럽 퀘사디아', '화이타 퀘사디아', '폴드포크 퀘사디아', '타코', '부리또', '카르네 아사다 스테이크 타코', '허니 치폴레 쉬림프 타코', '사우스 웨스트 치킨 타코', '폴드포크 타코', '쓰리 소스 화이타 부리또', '치미창가', '클래식 부리또', '델리오', '엘파소', '슈페리어', '토마토 함박 스테이크', '함박 스테이크앤 필라프', '키즈 퀘사디아', '치킨 텐더', '토마토 스파게티', '파스타', '피쉬 & 칩스 세트', '빅플래터 세트', '패밀리세트 D', '패밀리세트 C', '커플 세트 A', '커플 세트 B', '트리플 머시룸 버거', 'OTB 구아카몰 버거', 'OTB 블랑코 퀘소 버거', '스리라차 치킨 버거', '프레즐 치즈케이크', '보더 브라우니 썬데', '츄러스', '아이스크림', '쏘빠삐야', '츄러스 & 아이스크림', '필라프', '사이다', '감튀', '플레터', '셍맥주', '셍맥', '레드와인', '화이트와인', '피시앤칩스', '치킨텐더', '구아카몰라이브', '그릴드멕시칸콘', '쉬림프앤소세지', '라이스', '필라프', '치폴레화이타치킨싸이']
+drink=['스무디', '환타','음료수', '탄산', '탄산음료', '콜라', '마가리타', '스페셜리타', '맥주', '데킬라', '와인', '무알콜 드링크', '무알콜음료']
+branch=['에버랜드점', '온더보드 에버랜드점', '온더보더 에버랜드점', '광명점', '광명 AK점', '광명AK점', '현대백화점', '현대백화점 중동점', '중동점', '현대 디큐브시티점', '디큐브시티점', '수원점', '수원 AK점', '도심공항점', '코엑스 도심공항점', '코엑스도심공항점', '코엑스점', '여의도점', '여의도 IFC점', '롯데월드몰점', '롯데월드점', '타임스퀘어점', '스타필드점', '스타필드 하남점', '하남점', '롯데몰점', '김포공항점', '롯데몰 김포공항점', '부산점', '부산 삼정타워점', '대전점', '현대프리미엄아울렛 대전점', '현대 프리미엄 아울렛 대전점']
 
+for word in food:
+    newdict[word]="CV_FOOD"
+for word in drink:
+    newdict[word]="CV_DRINK"
+for word in branch:
+    newdict[word]="LC"
+for word in oov:
+    newdict[word]='O'
 
-# 학습 파일 불러오기
-def read_file(file_name):
-    sents = []
-    with open(file_name, 'r', encoding='utf-8') as f:
-        lines = f.readlines()
-        for idx, l in enumerate(lines):
-            if l[0] == ';' and lines[idx + 1][0] == '$':
-                this_sent = []
-            elif l[0] == '$' and lines[idx - 1][0] == ';':
-                continue
-            elif l[0] == '\n':
-                sents.append(this_sent)
-            else:
-                this_sent.append(tuple(l.split()))
-    return sents
+with open("ds-sa-chatbot-priv/chatbot/ds-sa-chatbot/additional_dict.csv") as add_dict:
+    ad=csv.reader(add_dict)
+    for row in ad:
+         newdict[row[0]]=row[1]
 
-p = Preprocess(w2v_model='ko_with_corpus_mc1_menu_added.kv', userdic='utils/user_dic.txt')
+with open("ds-sa-chatbot-priv/chatbot/ds-sa-chatbot/models/ner/ner2021_compressed.json", "w") as json_file:
+    json.dump(newdict, json_file, indent=4)
 
-# 학습용 말뭉치 데이터를 불러옴
-corpus = read_file('models/ner/'+'ner_train.txt')
-
-# 말뭉치 데이터에서 단어와 BIO 태그만 불러와 학습용 데이터셋 생성
-sentences, tags = [], []
-for t in corpus:
-    tagged_sentence = []
-    sentence, bio_tag = [], []
-    for w in t:
-        tagged_sentence.append((w[1], w[3]))
-        sentence.append(w[1])
-        bio_tag.append(w[3])
-    
-    sentences.append(sentence)
-    tags.append(bio_tag)
-
-
-print("샘플 크기 : \n", len(sentences))
-print("0번 째 샘플 단어 시퀀스 : \n", sentences[0])
-print("0번 째 샘플 bio 태그 : \n", tags[0])
-print("샘플 단어 시퀀스 최대 길이 :", max(len(l) for l in sentences))
-print("샘플 단어 시퀀스 평균 길이 :", (sum(map(len, sentences))/len(sentences)))
-
-# 토크나이저 정의
-tag_tokenizer = preprocessing.text.Tokenizer(lower=False) # 태그 정보는 lower=False 소문자로 변환하지 않는다.
-tag_tokenizer.fit_on_texts(tags)
-
-# 단어사전 및 태그 사전 크기
-vocab_size = len(p.word_index) + 1
-tag_size = len(tag_tokenizer.word_index) + 1
-print("BIO 태그 사전 크기 :", tag_size)
-print("단어 사전 크기 :", vocab_size)
-
-# 학습용 단어 시퀀스 생성
-x_train = [p.get_wordidx_sequence(sent) for sent in sentences]
-y_train = tag_tokenizer.texts_to_sequences(tags)
-
-index_to_ner = tag_tokenizer.index_word # 시퀀스 인덱스를 NER로 변환 하기 위해 사용
-index_to_ner[0] = 'PAD'
-
-# 시퀀스 패딩 처리
-max_len = 40
-x_train = preprocessing.sequence.pad_sequences(x_train, padding='post', maxlen=max_len)
-y_train = preprocessing.sequence.pad_sequences(y_train, padding='post', maxlen=max_len)
-
-ratio_total=np.unique(y_train, return_counts = True)[1]
-
-# 학습 데이터와 테스트 데이터를 8:2의 비율로 분리
-x_train, x_test, y_train, y_test = train_test_split(x_train, y_train,
-                                                    test_size=.2,
-                                                    random_state=1234)
-
-ratio_train=np.unique(y_train, return_counts = True)[1]
-ratio_test=np.unique(y_test, return_counts = True)[1]
-print('train:', ratio_train/ratio_total)
-print('test:', ratio_test/ratio_total)
-
-
-# 출력 데이터를 one-hot encoding
-y_train = tf.keras.utils.to_categorical(y_train, num_classes=tag_size)
-y_test = tf.keras.utils.to_categorical(y_test, num_classes=tag_size)
-
-print("학습 샘플 시퀀스 형상 : ", x_train.shape)
-print("학습 샘플 레이블 형상 : ", y_train.shape)
-print("테스트 샘플 시퀀스 형상 : ", x_test.shape)
-print("테스트 샘플 레이블 형상 : ", y_test.shape)
-
-
-# 모델 정의 (Bi-LSTM)
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Embedding, Dense, TimeDistributed, Dropout, Bidirectional
-from tensorflow.keras.optimizers import Adam
-
-kv = gensim.models.keyedvectors.KeyedVectors.load('ko_with_corpus_mc1_menu_added.kv')
-
-## setting Embeddings
-embeddings = np.zeros((vocab_size, 200))
-for word,idx in p.word_index.items():
-    ## update the row with vector
-    try:
-        embeddings[idx] =  kv.wv[word] #Embedding Layer를 w2v에 맞추어 재구성
-    ## if word not in model then skip and the row stays all 0s
-    except:
-        pass
-######################
-
-model = Sequential()
-model.add(Embedding(input_dim=vocab_size, output_dim=200, weights=[embeddings], input_length=max_len, mask_zero=True))
-#model.add(Embedding(input_dim=vocab_size, output_dim=30, input_length=max_len, mask_zero=True))
-model.add(Bidirectional(LSTM(200, return_sequences=True, dropout=0.50, recurrent_dropout=0.25)))
-model.add(TimeDistributed(Dense(tag_size, activation='softmax')))
-model.compile(loss='categorical_crossentropy', optimizer=Adam(0.01), metrics=['accuracy'])
-model.fit(x_train, y_train, batch_size=128, epochs=10)
-
-print("평가 결과 : ", model.evaluate(x_test, y_test)[1])
-model.save('./models/ner/ner_model2.h5')
-
-
-# 시퀀스를 NER 태그로 변환
-def sequences_to_tag(sequences):  # 예측값을 index_to_ner를 사용하여 태깅 정보로 변경하는 함수.
-    result = []
-    for sequence in sequences:  # 전체 시퀀스로부터 시퀀스를 하나씩 꺼낸다.
-        temp = []
-        for pred in sequence:  # 시퀀스로부터 예측값을 하나씩 꺼낸다.
-            pred_index = np.argmax(pred)  # 예를 들어 [0, 0, 1, 0 ,0]라면 1의 인덱스인 2를 리턴한다.
-            temp.append(index_to_ner[pred_index].replace("PAD", "O"))  # 'PAD'는 'O'로 변경
-        result.append(temp)
-    return result
-
-
-# f1 스코어 계산을 위해 사용
-from seqeval.metrics import f1_score, classification_report
-
-# 테스트 데이터셋의 NER 예측
-y_predicted = model.predict(x_test)
-pred_tags = sequences_to_tag(y_predicted) # 예측된 NER
-test_tags = sequences_to_tag(y_test)    # 실제 NER
-
-# F1 평가 결과
-print(classification_report(test_tags, pred_tags))
-print("F1-score: {:.1%}".format(f1_score(test_tags, pred_tags)))
+print("dictionary size:", len(newdict.keys()))
