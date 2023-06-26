@@ -20,7 +20,7 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 
 from utils.PreprocessW2V import PreprocessW2V as Preprocess
-from models.ner.NerModel import NerModel
+from models.ner.NerModel_New import NerModel
 #from models.intent.IntentModel import IntentModel
 from models.intent.IntentModel_New import IntentModel
 
@@ -28,12 +28,15 @@ from models.intent.IntentModel_New import IntentModel
 # 전처리 객체 생성
 p = Preprocess(w2v_model='ko_with_corpus_mc1_menu_added.kv', userdic='utils/user_dic.txt')
 
+# 개체명 인식 모델
+ner = NerModel(proprocess=p)
+
 # 의도 파악 모델
 #intent = IntentModel(model_name='models/intent/intent_w2v_model.h5', proprocess=p)
-intent = IntentModel(proprocess=p)
+intent = IntentModel(proprocess=p, nermodel=ner)
 
 # 개체명 인식 모델
-ner = NerModel(model_name='models/ner/ner_model2.h5', proprocess=p)
+ner = NerModel(proprocess=p)
 
 # 학습 파일 불러오기
 def read_file(file_name):
@@ -108,6 +111,15 @@ samples='가락지빵 짬뽕 짜장면 바나나 쀍'
 print(ner.predict(samples))
 '''
 
+def analyse_sent(sent):
+    intention=intent.predict_class(sent)
+    pos = p.pos(sent)
+    keywords = p.get_keywords(pos, without_tag=True)
+    nertags=ner.predict(sent)
+    tags=[x[1] for x in nertags]
+    result= [sent,intention, keywords, tags]
+    print(result)
+
 def intent_test():
     train_file = "total_train_data_new.csv"
     data = pd.read_csv('models/intent/'+train_file, delimiter=',')
@@ -124,15 +136,30 @@ def intent_test():
     for i in range(data.shape[0]):
         
         result=intent.predict_class(queries[i])
-        if intents[i] not in labels.keys():
-            print(queries[i])
         if result!=labels[intents[i]]:
             cnt+=1
             pos = p.pos(queries[i])
             keywords = p.get_keywords(pos, without_tag=True)
-            writer.writerow([queries[i],intents[i], keywords, result])
+
+            nertags=ner.predict(queries[i])
+            tags=[x[1] for x in nertags]
+            writer.writerow([queries[i],intents[i], keywords, tags, result])
         i+=1
         
     f.close()
     print('result:',cnt,'per',data.shape[0], '=',1 - cnt/data.shape[0])
+
+
+def ner_test():
+    print(p.pos("부리또 주문할게요"))
+    print(ner.predict("부리또 주문할게요"))
+
 intent_test()
+#ner_test()
+
+samples=['커플이 먹을만한 메뉴 추천해줘', '가족 메뉴 추천해줘', '단체 메뉴 추천해줘', '제일 잘나가는게 뭐야?','아이들 먹을만한 메뉴 추천' '비건 메뉴 추천', '채식 메뉴 있어?', '키즈 메뉴 추천']
+#samples=['한시에 예약할게']
+
+
+#for sent in samples:
+#    analyse_sent(sent)

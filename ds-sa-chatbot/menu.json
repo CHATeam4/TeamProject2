@@ -1,0 +1,475 @@
+{
+    "페이버릿 초이스": [
+        {
+            "name": "빅 플래터",
+            "eng_name": "Big Platter",
+            "price": "49500",
+            "rec_cat": ["가족", "친구"],
+            "text": "바삭하게 튀긴 닭날개와 새우, 아보카도, 치즈 등을 넣고 말아 튀긴 쉬림프 롤. 으깬 닭가슴살과 치즈로 채운 뒤 튀긴 할라피뇨 꼬치가 함께 나오는 플래터"
+        },
+        {
+            "name": "보더 샘플러",
+            "eng_name": "Border Sampler",
+            "price": "45500",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "허니 치폴레 쉬림프",
+            "eng_name": "Honey Chipotle Shrimp",
+            "price": "28900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "프리타스 피쉬 & 칩스   &",
+            "eng_name": "&  Fritas Fish & Chips",
+            "price": "29500",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "보더윙",
+            "eng_name": "Border Wings",
+            "price": "26900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "구아카몰 라이브",
+            "eng_name": "Guacamole Live",
+            "price": "24900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "엠파나다",
+            "eng_name": "Empanada",
+            "price": "21500",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "구아카몰 볼",
+            "eng_name": "Guacamole Bowl",
+            "price": "11900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "퀘소볼",
+            "eng_name": "Queso Bowl",
+            "price": "10500",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "그릴드 멕시칸 콘",
+            "eng_name": "Grilled Mexican Corn",
+            "price": "7000",
+            "rec_cat": [],
+            "text": ""
+        }
+    ],
+    "샐러드": [
+        {
+            "name": "시즐링 화이타 샐러드",
+            "eng_name": "Sizzling Fajita Salad",
+            "price": "33500",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "타코 샐러드",
+            "eng_name": "Taco Salad",
+            "price": "32500",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "콥 샐러드",
+            "eng_name": "Cobb Salad",
+            "price": "27500",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "하우스 샐러드",
+            "eng_name": "House Salad",
+            "price": "11500",
+            "rec_cat": [],
+            "text": ""
+        }
+    ],
+    "라이스 & 수프 &": [
+        {
+            "name": "보더볼",
+            "eng_name": "Border Bowl",
+            "price": "27200",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "비프 타코 라이스",
+            "eng_name": "Beef Taco Rice",
+            "price": "25500",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "쉬림프 & 소시지 포솔레  &",
+            "eng_name": "&   Shrimp & Sausage Pozole",
+            "price": "11900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "치킨 또띠아 수프",
+            "eng_name": "Chicken Tortilla Soup",
+            "price": "10500",
+            "rec_cat": [],
+            "text": ""
+        }
+    ],
+    "화이타 & 스테이크 &": [
+        {
+            "name": "립아이 스테이크 & 쉬림프   &",
+            "eng_name": "&  Ribeye Steak & Shrimps",
+            "price": "79500",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "메가 쉬림프 화이타",
+            "eng_name": "Mega Shrimp Fajita",
+            "price": "68900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "콰트로 하이타",
+            "eng_name": "Quattro Fajita",
+            "price": "64900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "텍사스 바비큐 폭립",
+            "eng_name": "Texas BBQ Pork Rib",
+            "price": "55500",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "얼티밋 화이타",
+            "eng_name": "The Ultimate Fajita",
+            "price": "54900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "치폴레 화이타치킨 싸이",
+            "eng_name": "Chipotle Fajitachicken Thigh",
+            "price": "52500",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "몬트레이 랜치 치킨 화이타",
+            "eng_name": "Monterey Ranch Chicken Fajita",
+            "price": "49900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "메스퀴드 그릴 화이타",
+            "eng_name": "Mesquitegrilled Fajita",
+            "price": "47200",
+            "rec_cat": [],
+            "text": ""
+        }
+    ],
+    "퀘사디아 & 랜칠라다 &": [
+        {
+            "name": "랜칠라다",
+            "eng_name": "Ranchiladas",
+            "price": "53900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "더블 스텍 클럽 퀘사디아",
+            "eng_name": "Double Stacked Club Quesadillas",
+            "price": "39500",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "화이타 퀘사디아",
+            "eng_name": "Fajita Quesadillas",
+            "price": "35900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "폴드포크 퀘사디아",
+            "eng_name": "Pulled Pork Quesadillas",
+            "price": "30200",
+            "rec_cat": [],
+            "text": ""
+        }
+    ],
+    "타코 & 부리또 & 콤보 &  &": [
+        {
+            "name": "카르네 아사다 스테이크 타코",
+            "eng_name": "Carne Asada Steak Taco",
+            "price": "35200",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "허니 치폴레 쉬림프 타코",
+            "eng_name": "Honey Chipotle Shrimp Taco",
+            "price": "33200",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "사우스 웨스트 치킨 타코",
+            "eng_name": "South West Chicken Taco",
+            "price": "33200",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "폴드포크 타코",
+            "eng_name": "Pulled Pork Taco",
+            "price": "29200",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "쓰리 소스 화이타 부리또",
+            "eng_name": "Three Sauce Fajita Burrito",
+            "price": "35900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "치미창가",
+            "eng_name": "Chimichanga",
+            "price": "33200",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "클래식 부리또",
+            "eng_name": "Classic Burrito",
+            "price": "33200",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "델리오",
+            "eng_name": "Del Rio",
+            "price": "35900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "엘파소",
+            "eng_name": "El Paso",
+            "price": "35900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "슈페리어",
+            "eng_name": "Superior",
+            "price": "36900",
+            "rec_cat": [],
+            "text": ""
+        }
+    ],
+    "세트 & 키즈 &": [
+        {
+            "name": "토마토 함박 스테이크 & 필라프    &",
+            "eng_name": "&  Tomato Hamburg Steak & Pilaff",
+            "price": "12900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "키즈 퀘사디아",
+            "eng_name": "Kids Quesadillas",
+            "price": "11900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "치킨 텐더",
+            "eng_name": "Chicken Tender",
+            "price": "11900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "토마토 스파게티",
+            "eng_name": "Tomato Spaghetti",
+            "price": "11900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "비어버켓 피쉬 & 칩스 세트    &",
+            "eng_name": "&   Beer Bucket Fish & Chips Set",
+            "price": "82200",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "비어버켓 빅플래터 세트",
+            "eng_name": "Beer Bucket Big Platter Set",
+            "price": "81700",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "패밀리 세트",
+            "eng_name": "D   D Family SET",
+            "price": "189900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "패밀리 세트",
+            "eng_name": "C   C Family SET",
+            "price": "167500",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "커플 세트",
+            "eng_name": "B   B Couple SET",
+            "price": "105900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "커플 세트",
+            "eng_name": "A   A Couple SET",
+            "price": "101600",
+            "rec_cat": [],
+            "text": ""
+        }
+    ],
+    "버거 & 디저트 &": [
+        {
+            "name": "트리플 머시룸 버거",
+            "eng_name": "Truffle Mushroom Burger",
+            "price": "18900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "구아카몰 버거",
+            "eng_name": "OTB   OTB Guacamole Burger",
+            "price": "17900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "블랑코 퀘소 버거",
+            "eng_name": "OTB    OTB Blanco Queso Burger",
+            "price": "17900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "스리라차 치킨 버거",
+            "eng_name": "Sriracha Chicken Burger",
+            "price": "16900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "프레즐 치즈케이크",
+            "eng_name": "Pretzel Cheesecake",
+            "price": "9900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "보더 브라우니 썬데",
+            "eng_name": "BORDER BROWNIE SUNDAE",
+            "price": "15900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "츄러스 & 아이스크림  &",
+            "eng_name": "&  Churros & Ice cream",
+            "price": "13900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "쏘빠삐야",
+            "eng_name": "Sopapilla",
+            "price": "13900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "아이스크림",
+            "eng_name": "Ice Cream",
+            "price": "10500",
+            "rec_cat": [],
+            "text": ""
+        }
+    ],
+    "드링크": [
+        {
+            "name": "마가리타",
+            "eng_name": "MAGARITAS",
+            "price": "13900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "스페셜리타",
+            "eng_name": "SPECIALRITAS",
+            "price": "17900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "데킬라",
+            "eng_name": "TEQUILA",
+            "price": "8599",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "맥주",
+            "eng_name": "CERVEZAS",
+            "price": "5900",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "와인",
+            "eng_name": "VINO",
+            "price": "19800",
+            "rec_cat": [],
+            "text": ""
+        },
+        {
+            "name": "무알콜 드링크",
+            "eng_name": "NONALCOHOLIC",
+            "price": "4000",
+            "rec_cat": [],
+            "text": ""
+        }
+    ]
+}

@@ -5,19 +5,20 @@ from config.DatabaseConfig import *
 from utils.Database import Database
 from utils.BotServer import BotServer
 from utils.PreprocessW2V import PreprocessW2V as Preprocess
-from models.intent.IntentModel import IntentModel
-from models.ner.NerModel import NerModel
+from models.intent.IntentModel_New import IntentModel
+from models.ner.NerModel_New import NerModel
 from utils.FindAnswer import FindAnswer
 
 
 # 전처리 객체 생성
 p = Preprocess(w2v_model='ko_with_corpus_mc1_menu_added.kv', userdic='utils/user_dic.txt')
 
-# 의도 파악 모델
-intent = IntentModel(model_name='models/intent/intent_w2v_model.h5', proprocess=p)
-
 # 개체명 인식 모델
-ner = NerModel(model_name='models/ner/ner_model.h5', proprocess=p)
+ner = NerModel(proprocess=p)
+
+# 의도 파악 모델
+intent = IntentModel(proprocess=p, nermodel=ner, customer=None)
+
 
 
 def to_client(conn, addr, params):
@@ -43,8 +44,8 @@ def to_client(conn, addr, params):
         query = recv_json_data['Query']
 
         # 의도 파악
-        intent_predict = intent.predict_class(query)
-        intent_name = intent.labels[intent_predict]
+        intent_name = intent.predict_class(query)
+        tagword=intent.detailed_class_check(query)
 
         # 개체명 파악
         ner_predicts = ner.predict(query)
@@ -54,21 +55,20 @@ def to_client(conn, addr, params):
         # 답변 검색
         try:
             f = FindAnswer(db)
-            answer_text, answer_image, answer_code = f.search(intent_name, ner_tags)
+            answer_text, answer_code = f.search(intent_name, ner_tags)
             answer = f.tag_to_word(ner_predicts, answer_text)
 
         except:
             answer = "죄송해요 무슨 말인지 모르겠어요. 조금 더 공부 할게요."
-            answer_image = None
             answer_code = None
 
         send_json_data_str = {
             "Query" : query,
             "Answer": answer,
-            "AnswerImageUrl" : answer_image,
             "AnswerCode" : answer_code,
             "Intent": intent_name,
-            "NER": str(ner_predicts)
+            "Intent_tag": tagword,
+            "NER": str(ner_predicts) 
         }
         message = json.dumps(send_json_data_str)
         conn.send(message.encode())
