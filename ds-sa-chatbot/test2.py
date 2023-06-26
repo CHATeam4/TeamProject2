@@ -11,7 +11,6 @@ import csv
 import re
 
 from utils.PreprocessW2V import PreprocessW2V
-from utils.Preprocess import Preprocess
 
 import matplotlib.pyplot as plt
 import tensorflow as tf
@@ -154,12 +153,12 @@ def ner_test():
     print(p.pos("부리또 주문할게요"))
     print(ner.predict("부리또 주문할게요"))
 
-intent_test()
+#intent_test()
 #ner_test()
 
-samples=['커플이 먹을만한 메뉴 추천해줘', '가족 메뉴 추천해줘', '단체 메뉴 추천해줘', '제일 잘나가는게 뭐야?','아이들 먹을만한 메뉴 추천' '비건 메뉴 추천', '채식 메뉴 있어?', '키즈 메뉴 추천']
-#samples=['한시에 예약할게']
+#samples=['커플이 먹을만한 메뉴 추천해줘', '가족 메뉴 추천해줘', '단체 메뉴 추천해줘', '제일 잘나가는게 뭐야?','아이들 먹을만한 메뉴 추천' '비건 메뉴 추천', '채식 메뉴 있어?', '키즈 메뉴 추천']
+samples=['두시에 세명 예약해줘', '1 2 3 4 5 6 7 8 9 ']
 
 
-#for sent in samples:
-#    analyse_sent(sent)
+for sent in samples:
+    analyse_sent(sent)

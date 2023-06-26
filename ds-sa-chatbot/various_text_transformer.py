@@ -3,14 +3,36 @@ import json
 import re
 
 
-def dic_updater():
+def dic_updater_A(toadd):
+    with open("ds-sa-chatbot-priv/chatbot/ds-sa-chatbot/utils/user_dic.txt", 'r') as ufr:
+        udr=ufr.readlines()
+        for rows in udr:
+            words=rows.split("\t")
+            if len(words)!=0:
+                if words[0] in toadd:
+                    toadd.remove(words[0])
+
     with open("ds-sa-chatbot-priv/chatbot/ds-sa-chatbot/utils/user_dic.txt", 'a') as uf:
-        ud=csv.writer(uf)
-        ud.writerow("name"+"	NNG")
+        for name in toadd:
+            uf.write('\n'+name+"	NNG")
+
+
+def dic_updater_B(label, toadd):
+    with open("ds-sa-chatbot-priv/chatbot/ds-sa-chatbot/additional_dict.csv", 'r') as afr:
+        adr=csv.reader(afr)
+        for rows in adr:
+            if len(rows)!=0:
+                if rows[0] in toadd:
+                    toadd.remove(rows[0])
 
     with open("ds-sa-chatbot-priv/chatbot/ds-sa-chatbot/additional_dict.csv", 'a') as af:
         ad=csv.writer(af)
-        ad.writerow(["name", "B_FOOD"])
+        for name in toadd:
+            ad.writerow([name, label])
+
+def dic_updater(label, toadd):
+    dic_updater_A(toadd)
+    dic_updater_B(label, toadd)
 
 
 def menu_json_maker():
@@ -38,4 +60,31 @@ def menu_json_maker():
     with open("ds-sa-chatbot-priv/chatbot/ds-sa-chatbot/menu.json", "w", encoding='utf-8') as json_file:
         json.dump(menu, json_file, indent=4, ensure_ascii=False)
 
-menu_json_maker()
+
+
+
+def letsupdate():
+    with open('ds-sa-chatbot-priv/chatbot/ds-sa-chatbot/train_tools/qna/branch.json', 'r', encoding='utf-8') as brc:
+        brch=json.load(brc)
+        brcsubs=[]
+        for brc in brch:
+            brcsubs+=brc['name']
+
+    dic_updater("LC", brcsubs)
+
+    with open('ds-sa-chatbot-priv/chatbot/ds-sa-chatbot/menu.json', 'r', encoding='utf-8') as f:
+        menu=json.load(f)
+        submenu=[]
+        for cat in menu.values():
+            for food in cat:
+                submenu.append(food["name"])
+
+    dic_updater("B_FOOD", submenu)
+
+    add_list=["수신거부", "고객만족도", "기념일", "생일", "쿠폰", "재결제", "상품권"]
+
+    dic_updater("O", add_list)
+
+    print("업데이트 완료. train_ner_mod를 돌리시오.")
+
+letsupdate()
