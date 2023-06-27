@@ -4,6 +4,8 @@ from konlpy.tag import Komoran
 import pickle
 import jpype
 import gensim
+import re
+import json
 
 class PreprocessW2V:
     def __init__(self, w2v_model='ko_with_corpus_mc1.model', userdic=None):
@@ -34,6 +36,21 @@ class PreprocessW2V:
             'XSN', 'XSV', 'XSA'
         ]
 
+        with open('menu.json', 'r', encoding='utf-8') as f:
+            self.menu=json.load(f)
+        self.submenu=[]
+        for cat in self.menu.values():
+            for food in cat:
+                self.submenu.append(food["name"])
+
+        self.mod_submenu=[]
+        for item in self.submenu:
+            mod_item=re.sub(r"[^가-힣a-zA-Z]", "", item)
+            dic={}
+            dic['mod']=mod_item
+            dic['exactname']=item
+            self.mod_submenu.append(dic)
+
     # 형태소 분석기 POS 태거
     def pos(self, sentence):
         jpype.attachThreadToJVM()
@@ -46,6 +63,10 @@ class PreprocessW2V:
         for p in pos:
             if f(p[1]) is False:
                 word_list.append(p if without_tag is False else p[0])
+
+        if without_tag==True:
+            word_list=self.auto_correct_keywords(word_list)
+
         return word_list
 
     # 키워드를 단어 인덱스 시퀀스로 변환
@@ -62,3 +83,17 @@ class PreprocessW2V:
                 w2i.append(self.word_index['O']) #w2v의 불용어는 O에 대응
         return w2i
 
+    def auto_correct(self, word):
+        result=word
+        mod_word=re.sub(r"[^가-힣a-zA-Z]", "", word)
+        for item in self.mod_submenu:
+            if mod_word==item['mod']:
+                result=item['exactname']
+        return result
+
+    def auto_correct_keywords(self, lst):
+        new=[]
+        for word in lst:
+            new_word=self.auto_correct(word)
+            new.append(new_word)
+        return new
