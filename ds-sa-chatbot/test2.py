@@ -9,7 +9,7 @@ import gensim
 import numpy as np
 import csv
 import re
-
+from customer import Customer
 from utils.PreprocessW2V import PreprocessW2V
 
 import matplotlib.pyplot as plt
@@ -24,6 +24,7 @@ from models.ner.NerModel_New import NerModel
 from models.intent.IntentModel_New import IntentModel
 
 
+cust=Customer()
 # 전처리 객체 생성
 p = Preprocess(w2v_model='ko_with_corpus_mc1_menu_added.kv', userdic='utils/user_dic.txt')
 
@@ -32,7 +33,7 @@ ner = NerModel(proprocess=p)
 
 # 의도 파악 모델
 #intent = IntentModel(model_name='models/intent/intent_w2v_model.h5', proprocess=p)
-intent = IntentModel(proprocess=p, nermodel=ner)
+intent = IntentModel(proprocess=p, nermodel=ner, customer=cust)
 
 # 개체명 인식 모델
 ner = NerModel(proprocess=p)
@@ -153,12 +154,29 @@ def ner_test():
     print(p.pos("부리또 주문할게요"))
     print(ner.predict("부리또 주문할게요"))
 
+
+def abb_menu(tagword, menu):
+        mod_menu={}
+        for cat_name, cat_list in menu.items():
+            print(cat_list)
+            for food in cat_list:
+                if tagword in food['rec_cat']:
+                    if cat_name in mod_menu.keys():
+                        mod_menu[cat_name].append(food)
+                    else:
+                        mod_menu[cat_name]=[]
+                        mod_menu[cat_name].append(food)
+        return mod_menu
+
+
 #intent_test()
 #ner_test()
 
 #samples=['커플이 먹을만한 메뉴 추천해줘', '가족 메뉴 추천해줘', '단체 메뉴 추천해줘', '제일 잘나가는게 뭐야?','아이들 먹을만한 메뉴 추천' '비건 메뉴 추천', '채식 메뉴 있어?', '키즈 메뉴 추천']
 samples=['두시에 세명 예약해줘', '1 2 3 4 5 6 7 8 9 ']
 
+mod=abb_menu(tagword='가족', menu=intent.menu)
+print(mod)
 
-for sent in samples:
-    analyse_sent(sent)
+#for sent in samples:
+#    analyse_sent(sent)

@@ -60,34 +60,36 @@ def to_client(conn, addr, params):
         try:
             f = FindAnswer(db)
             answer, answer_code = f.search(intent_name, ner_predicts)
-            if answer_code=="11":
+            if answer_code=="22":
                 answer=''
-                tempbag=[]
+                tempbag=''
+                checker=0
                 for word, tag in ner_predicts:
-                    if checker==1 and tag=="QT":
-                        if word in wordtonum.keys():
-                            num=wordtonum[word]
+                    if checker==1:
+                        if tag=="QT":
+                            num=f.to_number(word)
+                            cust.put_item(tempbag, num)
+                            answer+=tempbag+' '+str(num)+', '
+                            tempbag=''
                         else:
-                            num=1
-                        cust.put_item(word, num)
-                        answer+=word+' '+str(num)+', '
-                    else:
-                        cust.put_item(word, 1)
-                        answer+=word+', '
-                    checker=0
+                            cust.put_item(tempbag, 1)
+                            answer+=tempbag+', '
+                            tempbag=''
+                        checker=0
 
                     if word in intent.submenu:
                         tempbag=word
                         checker=1
                 if checker==1:
-                    cust.put_item(word, 1)
-                    answer+=word+' '+str(num)+', '
+                    cust.put_item(tempbag, 1)
+                    answer+=tempbag+', '
+                    tempbag=''
    
-                if len(tempbag)!=0:
+                if len(answer)!=0:
                     answer=answer[:-2]+" 장바구니에 넣었습니다."
                 else:
                     answer = "죄송합니다. 저희 매장에는 없는 메뉴입니다."
-            if answer_code=="12":
+            if answer_code=="21":
                 tempbag=[]
                 for word, tag in ner_predicts:
                     if word in cust.bag:
@@ -100,6 +102,17 @@ def to_client(conn, addr, params):
                     answer=answer[:-2]+" 장바구니에서 제외되었습니다."
                 else:
                     answer = "해당 메뉴는 장바구니에 없습니다."
+            if answer_code=='2':
+                if len(cust.bag)!=0:
+                    answer='다음 메뉴를 최종 주문합니다.'
+                    for item in cust.bag:
+                        answer+=f"\n{item}, {cust.numbag[item]}"
+                    total=cust.charge()
+                    answer+=f"\n총액:{total}원"
+                    #주문 내역 보여주기는 디스플레이로 대체 가능하다면 지울것
+                else:
+                    answer='장바구니에 담긴 메뉴가 없습니다.'
+
             if answer_code=='4':
                 if intent_name=="메뉴안내":
                     search_done=0
@@ -108,7 +121,10 @@ def to_client(conn, addr, params):
                             for cat in intent.menu.values():
                                 for exactmenu in cat:
                                     if exactmenu['name']==word and search_done==0:
-                                        answer=exactmenu['text']
+                                        if tagword=="뭐":
+                                            answer=exactmenu['text']
+                                        if tagword=="얼마":
+                                            answer=exactmenu['name']+"의 가격은 "+exactmenu['price']+"원 입니다."
                                         search_done=1
                                         break
                     
@@ -116,39 +132,40 @@ def to_client(conn, addr, params):
                         answer = "죄송해요 무슨 말인지 모르겠어요. 조금 더 공부 할게요."
                 else:
                     answer=f.match_answer(tagword, intent_name, ner_predicts)
-                if tagword=="가깝":
-                    answer="여기서 가장 가까운 매장은 코엑스 도심공항점입니다."
+
             
             if answer_code=='3':
                 answer, mod_menu=f.show_menu(tagword, intent.menu)
+                #아래 코드는 디스플레이가 마련되면 지울것
+                answer=f.display_menu(mod_menu, answer)
 
             if answer_code=='1':
                 if tagword in ['취소', '못하', '미루', '미루워', '캔슬', '조정']:
                     if len(cust.reservation)==0:
-                        answer=="취소할 수 있는 예약이 없습니다."
+                        answer="취소할 수 있는 예약이 없습니다."
                     else: 
                         time, person= f.timeandperson(ner_predicts)
                         answer="해당 시간에 잡힌 예약이 없습니다."
                         for reserv in cust.reservation:
                             if reserv[0]==time:
                                 cust.cancel_reserv(time)
-                                answer==f"{time}시 예약을 취소하였습니다."
+                                answer=f"{time}시 예약을 취소하였습니다."
                 else:
                     answer=''
                     time, person= f.timeandperson(ner_predicts)
                     if time!=None and person!=None:
-                        answer+=time+'시 '+person+'명 예약합니다.'
+                        answer=str(time)+'시 '+str(person)+'명 예약합니다.'
                         cust.reserv(time, person)
                     else:
                         answer="예약창으로 이동합니다. 나머지 정보를 채워주십시오."
-
-            #예약 내역 보여주기
-
-
-                    
-
-
-
+                if len(cust.reservation)!=0:
+                    answer+=f"\n예약 현황:"
+                    for reserv in cust.reservation:
+                        answer+=f"\n{reserv[0]}시, {reserv[1]}명"
+                    #예약 내역 보여주기는 디스플레이로 대체 가능하다면 지울것
+            if answer_code=='5':
+                    answer="현재 진행중인 이벤트를 안내드리겠습니다."
+                    #이벤트 이미지 첨부
 
 
         except:
@@ -165,6 +182,10 @@ def to_client(conn, addr, params):
         }
         message = json.dumps(send_json_data_str)
         conn.send(message.encode())
+        #if answer_code=='3':
+        #    menu_to_display = json.dumps(mod_menu)
+        #    conn.send(message.encode())
+
 
     except Exception as ex:
         print(ex)
