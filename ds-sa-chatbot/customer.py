@@ -18,7 +18,9 @@ class Customer:
                     self.price[food["name"]]=int(food["price"])
 
     def put_item(self, item, num):
-        self.bag.append(item)
+        if item not in self.bag:
+            self.bag.append(item)
+        
         if item in self.numbag.keys():
             self.numbag[item]+=num
         else:
@@ -45,6 +47,7 @@ class Customer:
    
     def reserv(self, time, person):
         self.reservation.append([time,person])
+        self.reservation.sort()
 
     def cancel_reserv(self, time):
         for reserv in self.reservation:

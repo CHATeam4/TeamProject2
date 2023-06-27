@@ -1,4 +1,5 @@
 import json
+import re
 
 class FindAnswer:
     def __init__(self, db):
@@ -62,18 +63,18 @@ class FindAnswer:
         if intent_name=="예약":
             answer_code='1'
         if intent_name=="주문취소":
-            answer_code='11'
+            answer_code='21'
         if intent_name=="주문":
             answer_code='2'
             for word, tag in ner_predicts:
                 if tag=="B_FOOD":
-                    answer_code='12'
+                    answer_code='22'
         if intent_name=="메뉴추천":
             answer_code='3'
         if intent_name=="메뉴안내":
             answer_code='3'
             for word, tag in ner_predicts:
-                if word=="뭐":
+                if word=="뭐" or word =="얼마":
                     answer_code='4'
         if intent_name=="매장문의" or intent_name=="매장정보":
             answer_code='4'
@@ -84,23 +85,26 @@ class FindAnswer:
     
     #지점 faq 답 생성
     def make_sentence(self, exactname, info, keytag):
+
         if keytag=="parking":
             answer=f"{info}"
-        if keytag=="transportation":
+        elif keytag=="transportation":
             answer=f"{info}"
-        if keytag=="location":
+        elif keytag=="location":
             answer=f"{exactname}점의 주소는 {info}입니다."
-        if keytag=="phone":
+        elif keytag=="phone":
             answer=f"{exactname}점의 전화번호는 {info}입니다."
-        if keytag=="time":
+        elif keytag=="time":
             answer=f"{exactname}점의 영업시간은 {info}입니다."
         return answer
 
 
     #faq 답 생성
     def match_answer(self, tagword, intent, ner_predicts):
+
         if intent=="매장정보":
             answer="매장별 번호, 주차, 교통, 위치 등 기본 정보는 홈페이지의 매장 탭에 안내되어있으니 참고 부탁드립니다." #기본 메시지
+            keytag='default'
             if tagword in ["주차", "주차장"]: 
                 keytag="parking"
             elif tagword in ["교통"]: 
@@ -111,22 +115,21 @@ class FindAnswer:
                 keytag="phone"
             elif tagword in ["이용시간"]: 
                 keytag="time"
+            elif tagword in ['가깝']:
+                answer="여기서 가장 가까운 매장은 코엑스 도심공항점입니다."
 
-            for word, tag in ner_predicts:
-                for brch in self.branch:
-                    if word in brch["name"]:
-                        exactname=brch['exactname']
-                        info=brch[keytag]
-            answer=self.make_sentence(exactname, info, keytag)
+            if keytag!='default':
+                for word, tag in ner_predicts:
+                    for brch in self.branch:
+                        if word in brch["name"]:
+                            exactname=brch['exactname']
+                            info=brch[keytag]
+                answer=self.make_sentence(exactname, info, keytag)
 
         if intent=="매장문의":
             answer = "상담원 연결을 도와드리겠습니다. 잠시만 기다려주세요." #기본 메시지
             if tagword in self.faq.keys():
                 answer=self.faq[tagword]
-            else:
-                for word in self.faq.keys():
-                    if tagword in word:
-                        answer=self.faq[word]
 
         return answer
     
@@ -135,11 +138,12 @@ class FindAnswer:
         mod_menu={}
         for cat_name, cat_list in menu.items():
             for food in cat_list:
-                if tagword in cat_list['rec_cat']:
+                if tagword in food['rec_cat']:
                     if cat_name in mod_menu.keys():
                         mod_menu[cat_name].append(food)
                     else:
-                        mod_menu[cat_name]=[food]
+                        mod_menu[cat_name]=[]
+                        mod_menu[cat_name].append(food)
         return mod_menu
 
 
@@ -147,7 +151,9 @@ class FindAnswer:
         wordtonum={ "두":"2", "세":"3", "네":"4","다섯":"5","여섯":"6","일곱":"7","여덟":"8","아홉":"9","열":"10"}
         if tagword in wordtonum.keys():
             tagword=wordtonum[tagword]
-        if tagword==None:
+        answer=''
+
+        if tagword=="전체":
             #전체
             mod_menu=menu
             answer="전체 메뉴판을 준비해드리겠습니다."
@@ -170,5 +176,50 @@ class FindAnswer:
             mod_menu=self.abb_menu("Best", menu)     
             answer=f"온더보더 베스트 메뉴는 다음과 같이 준비되어있습니다."
 
+        with open("mod_menu.json", "w", encoding='utf-8') as json_file:
+            json.dump(mod_menu, json_file, indent=4, ensure_ascii=False)
+
+
         return answer, mod_menu
         
+    
+    def to_number(self, word):
+        wordtonum={ "두":"2", "세":"3", "네":"4","다섯":"5","여섯":"6","일곱":"7","여덟":"8","아홉":"9","열":"10"}
+        if word in wordtonum.keys():
+            word=wordtonum[word]
+        number=int(re.sub(r"[^0-9]", "", word))
+        if number=='':
+            number=1
+        
+        return number
+
+    def timeandperson(self, ner_predicts):
+        number=''
+        time=None
+        person=None
+        for word, tag in ner_predicts:
+            if number!='':
+                if word=='시':
+                    time=number
+                if word in ['명', '분','사람'] or tag=='PS':
+                    person=number
+
+            number=''
+            if tag=="QT":
+                number=self.to_number(word)
+
+            if tag=='TI':
+                time=int(re.sub(r"[^0-9]", "", word))
+
+        return time, person
+
+
+    def display_menu(self, menu, answer):
+        adder=''
+        for cat_name, cat_list in menu.items():
+            adder+=f"\n{cat_name}:"
+            for food in cat_list:
+                adder+=f"\n{food['name']} : {food['price']}\n{food['text']}"
+
+        answer+=adder
+        return answer
