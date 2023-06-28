@@ -169,7 +169,18 @@ def abb_menu(tagword, menu):
         return mod_menu
 
 
-#intent_test()
+
+def display_menu(menu, answer):
+    adder=''
+    for cat_name, cat_list in menu.items():
+        adder+=f"\n{cat_name}:"
+        for food in cat_list:
+            adder+=f"\n{food['name']} : {food['price']}\n{food['text']}"
+
+    answer+=adder
+    return answer
+
+intent_test()
 #ner_test()
 
 #samples=['커플이 먹을만한 메뉴 추천해줘', '가족 메뉴 추천해줘', '단체 메뉴 추천해줘', '제일 잘나가는게 뭐야?','아이들 먹을만한 메뉴 추천' '비건 메뉴 추천', '채식 메뉴 있어?', '키즈 메뉴 추천']
@@ -184,7 +195,9 @@ samples=['구아카몰라이브', '치폴레화이타치킨싸이','콜라', '�
 #for sent in samples:
 #    analyse_sent(sent)
 
-for sent in samples:
-    pos = p.pos(sent)
-    keywords = p.get_keywords(pos, without_tag=True)
-    print(sent,keywords)
+#for sent in samples:
+#    pos = p.pos(sent)
+#    keywords = p.get_keywords(pos, without_tag=True)
+#    print(sent,keywords)
+
+#print(display_menu(intent.menu, ''))

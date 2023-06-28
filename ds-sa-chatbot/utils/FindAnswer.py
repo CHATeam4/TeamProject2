@@ -155,7 +155,7 @@ class FindAnswer:
 
         if tagword=="전체":
             #전체
-            mod_menu=menu
+            mod_menu=self.copy_menu(menu)
             answer="전체 메뉴판을 준비해드리겠습니다."
         elif tagword in ["2","3","4","5","6","7","8","9","10"]:
             #인원
