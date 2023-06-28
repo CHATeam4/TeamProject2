@@ -3,6 +3,18 @@
 <head>
     <title>온더보더</title>
     <link rel="stylesheet" type="text/css" href="index.css">
+    <style>
+        .cart-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: white;
+            color: black;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <div class="chat-container">
@@ -32,8 +44,11 @@
             <button type="button">전송</button>
         </div>
     </div>
-    
+    <div class="cart-button" onclick="handleCartButtonClick()">장바구니</div>
+
     <script>
+        var isCartOpen = false;
+
         function handleButtonClick(buttonName) {
             if (buttonName === '예약 관리') {
                 loadReservation();
@@ -49,12 +64,19 @@
                 loadCustomerService();
             } else if (buttonName === '주문') {
                 loadOrder();
+            } else if (buttonName === '장바구니') {
+                if (isCartOpen) {
+                    // 장바구니 페이지가 이미 열려있으면 홈으로 돌아가기
+                    window.location.href = 'index.html';
+                } else {
+                    loadCart();
+                }
             }
         }
 
         function loadReservation() {
             var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
+            xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var chatLog = document.querySelector(".chat-log");
                     chatLog.innerHTML = xhr.responseText;
@@ -66,7 +88,7 @@
 
         function loadMenuInfo() {
             var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
+            xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var chatLog = document.querySelector(".chat-log");
                     chatLog.innerHTML = xhr.responseText;
@@ -78,7 +100,7 @@
 
         function loadMenuRecommend() {
             var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
+            xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var chatLog = document.querySelector(".chat-log");
                     chatLog.innerHTML = xhr.responseText;
@@ -90,7 +112,7 @@
 
         function loadPromotion() {
             var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
+            xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var chatLog = document.querySelector(".chat-log");
                     chatLog.innerHTML = xhr.responseText;
@@ -102,7 +124,7 @@
 
         function loadStoreInfo() {
             var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
+            xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var chatLog = document.querySelector(".chat-log");
                     chatLog.innerHTML = xhr.responseText;
@@ -111,10 +133,10 @@
             xhr.open("GET", "storeinfo.html", true);
             xhr.send();
         }
-            
+
         function loadCustomerService() {
             var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
+            xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var chatLog = document.querySelector(".chat-log");
                     chatLog.innerHTML = xhr.responseText;
@@ -126,7 +148,7 @@
 
         function loadOrder() {
             var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
+            xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var chatLog = document.querySelector(".chat-log");
                     chatLog.innerHTML = xhr.responseText;
@@ -136,32 +158,53 @@
             xhr.send();
         }
 
-        function sendMessage() {
-        var input = document.querySelector(".chat-input input");
-        var message = input.value.trim();
-        if (message !== "") {
-            var chatLog = document.querySelector(".chat-log");
-            var userMessage = document.createElement("div");
-            userMessage.className = "chat-message";
-            var userBubble = document.createElement("div");
-            userBubble.className = "user-message";
-            userBubble.textContent = message;
-            userMessage.appendChild(userBubble);
-            chatLog.appendChild(userMessage);
-            input.value = "";
+        function loadCart() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var chatLog = document.querySelector(".chat-log");
+                    chatLog.innerHTML = xhr.responseText;
+                    isCartOpen = true; // 장바구니 페이지 열림 플래그 설정
+                }
+            };
+            xhr.open("GET", "cart.html", true);
+            xhr.send();
         }
+
+        function handleCartButtonClick() {
+            if (isCartOpen) {
+                // 장바구니 페이지가 이미 열려있으면 홈으로 돌아가기
+                window.location.href = 'index.html';
+            } else {
+                loadCart();
+            }
+        }
+
+        function sendMessage() {
+            var input = document.querySelector(".chat-input input");
+            var message = input.value.trim();
+            if (message !== "") {
+                var chatLog = document.querySelector(".chat-log");
+                var userMessage = document.createElement("div");
+                userMessage.className = "chat-message";
+                var userBubble = document.createElement("div");
+                userBubble.className = "user-message";
+                userBubble.textContent = message;
+                userMessage.appendChild(userBubble);
+                chatLog.appendChild(userMessage);
+                input.value = "";
+            }
         }
 
         var sendButton = document.querySelector(".chat-input button");
         sendButton.addEventListener("click", sendMessage);
 
         var inputBox = document.querySelector(".chat-input input");
-        inputBox.addEventListener("keydown", function(event) {
+        inputBox.addEventListener("keydown", function (event) {
             if (event.key === "Enter") {
                 sendMessage();
             }
         });
-
     </script>
 </body>
 </html>

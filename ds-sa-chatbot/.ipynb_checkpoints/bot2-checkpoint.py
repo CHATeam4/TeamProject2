@@ -80,7 +80,6 @@ def to_client(conn, addr, params):
                     if word in intent.submenu:
                         tempbag=word
                         checker=1
-                        
                 if checker==1:
                     cust.put_item(tempbag, 1)
                     answer+=tempbag+', '
@@ -104,6 +103,7 @@ def to_client(conn, addr, params):
                         answer+=word+', '
                     answer=answer[:-2]+" 장바구니에서 제외되었습니다."
                     # 장바구니 정보를 담은 데이터 생성
+                    
                 else:
                     answer = "해당 메뉴는 장바구니에 없습니다."
                     
@@ -192,8 +192,7 @@ def to_client(conn, addr, params):
             "Menu": [data['name'] for data in cart_data],
             "Num": [data['quantity'] for data in cart_data],
             "Total_price": total_price
-            }
-
+        }
         message = json.dumps(send_json_data_str)
         conn.send(message.encode())
         #if answer_code=='3':
