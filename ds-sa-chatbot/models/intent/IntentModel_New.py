@@ -103,8 +103,6 @@ class IntentModel:
             return "예약"
         elif class_check(self.amb, keywords) and class_check(self.exact_menu_name, keywords): #구체적 메뉴명 +싶이면 주문으로, 아니면 추천으로 받음
             return "주문"
-        elif class_check(self.order_words, keywords):
-            return "주문"
         elif class_check(self.branch, keywords):
             return "매장정보"
         elif class_check(self.event_words, keywords):
@@ -121,7 +119,7 @@ class IntentModel:
             return "메뉴추천"
         elif class_check(self.greet_words, keywords):
             return "인사"
-        if "B_FOOD" in tags:
+        elif "B_FOOD" in tags:
             if class_check(self.exact_menu_name, keywords): #구체적인 메뉴 이름을 말했다면 주문으로 넘어감
                 if "뭐" in keywords or "얼마" in keywords:
                     return "메뉴안내"
@@ -134,6 +132,8 @@ class IntentModel:
                     return "메뉴추천"
             elif class_check(self.extra_food, keywords): #없는 메뉴를 말했을 경우 없다는 답변을 내놓을 것.
                 return "주문"
+        elif class_check(self.order_words, keywords):
+            return "주문"
         
         
 
@@ -185,8 +185,6 @@ class IntentModel:
             return return_word(self.reserv_words_sub, keywords)
         elif class_check(self.amb, keywords) and class_check(self.exact_menu_name, keywords): #구체적 메뉴명 +싶이면 주문으로, 아니면 추천으로 받음
             return None
-        elif class_check(self.order_words, keywords):
-            return None
         elif class_check(self.branch, keywords):
             return return_word(self.info_words, keywords)
         elif class_check(self.event_words, keywords):
@@ -203,7 +201,7 @@ class IntentModel:
             return return_word(self.rec_words_sub, keywords)
         elif class_check(self.greet_words, keywords):
             return None
-        if "B_FOOD" in tags:
+        elif "B_FOOD" in tags:
             if class_check(self.exact_menu_name, keywords): #구체적인 메뉴 이름을 말했다면 주문으로 넘어감
                 if "뭐" in keywords or "얼마" in keywords:
                     return return_word(['뭐','얼마'], keywords)
@@ -216,7 +214,8 @@ class IntentModel:
                     return return_word(self.vague_menu_name, keywords)
             elif class_check(self.extra_food, keywords): #없는 메뉴를 말했을 경우 없다는 답변을 내놓을 것.
                 return None
-        
+        elif class_check(self.order_words, keywords):
+            return None
         
 
         return "기타"
