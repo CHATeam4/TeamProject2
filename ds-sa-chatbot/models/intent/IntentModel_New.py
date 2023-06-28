@@ -28,12 +28,12 @@ class IntentModel:
         for brc in self.brch:
             self.brcsubs+=brc['name']
 
-
+        
         # 챗봇 Preprocess 객체
         self.p = proprocess
         self.nermodel = nermodel
-
-
+        self.drinks=["논알콜 푸룻 마가리타","프레쉬 에이드","하리토스","페리에","소프트 드링크","커피","홍차","레드 와인","화이트 와인","생맥주","멕시코맥주","크래프트맥주","콜라","사이다","환타"]
+        self.submenu+=self.drinks
         #레이블별 단어그룹
         self.greet_words=["헬로우", "헬로", "인사", "안녕", "안녕하세요", "반갑", "반가", "하이", "좋은 아침", "지내", "안녕히", "반갑습니다", "봄"]
         self.menu_words=["메뉴판", "전체 메뉴", "매뉴판", "전체"]
@@ -119,19 +119,18 @@ class IntentModel:
             return "메뉴추천"
         elif class_check(self.greet_words, keywords):
             return "인사"
-        elif "B_FOOD" in tags:
-            if class_check(self.exact_menu_name, keywords): #구체적인 메뉴 이름을 말했다면 주문으로 넘어감
-                if "뭐" in keywords or "얼마" in keywords:
-                    return "메뉴안내"
-                else:
-                    return "주문"
-            elif class_check(self.vague_menu_name, keywords): #대략적인 메뉴 이름을 말하면 추천으로 넘어감
-                if "뭐" in keywords:
-                    return "메뉴안내"
-                else:
-                    return "메뉴추천"
-            elif class_check(self.extra_food, keywords): #없는 메뉴를 말했을 경우 없다는 답변을 내놓을 것.
+        elif class_check(self.exact_menu_name, keywords): #구체적인 메뉴 이름을 말했다면 주문으로 넘어감
+            if "뭐" in keywords or "얼마" in keywords:
+                return "메뉴안내"
+            else:
                 return "주문"
+        elif class_check(self.vague_menu_name, keywords): #대략적인 메뉴 이름을 말하면 추천으로 넘어감
+            if "뭐" in keywords:
+                return "메뉴안내"
+            else:
+                return "메뉴추천"
+        elif class_check(self.extra_food, keywords): #없는 메뉴를 말했을 경우 없다는 답변을 내놓을 것.
+            return "주문"
         elif class_check(self.order_words, keywords):
             return "주문"
         
@@ -201,19 +200,18 @@ class IntentModel:
             return return_word(self.rec_words_sub, keywords)
         elif class_check(self.greet_words, keywords):
             return None
-        elif "B_FOOD" in tags:
-            if class_check(self.exact_menu_name, keywords): #구체적인 메뉴 이름을 말했다면 주문으로 넘어감
-                if "뭐" in keywords or "얼마" in keywords:
-                    return return_word(['뭐','얼마'], keywords)
-                else:
-                    return None
-            elif class_check(self.vague_menu_name, keywords): #대략적인 메뉴 이름을 말하면 추천으로 넘어감
-                if "뭐" in keywords:
-                    return None
-                else:
-                    return return_word(self.vague_menu_name, keywords)
-            elif class_check(self.extra_food, keywords): #없는 메뉴를 말했을 경우 없다는 답변을 내놓을 것.
+        elif class_check(self.exact_menu_name, keywords): #구체적인 메뉴 이름을 말했다면 주문으로 넘어감
+            if "뭐" in keywords or "얼마" in keywords:
+                return return_word(['뭐','얼마'], keywords)
+            else:
                 return None
+        elif class_check(self.vague_menu_name, keywords): #대략적인 메뉴 이름을 말하면 추천으로 넘어감
+            if "뭐" in keywords:
+                return None
+            else:
+                return return_word(self.vague_menu_name, keywords)
+        elif class_check(self.extra_food, keywords): #없는 메뉴를 말했을 경우 없다는 답변을 내놓을 것.
+            return None
         elif class_check(self.order_words, keywords):
             return None
         

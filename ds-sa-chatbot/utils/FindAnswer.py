@@ -223,3 +223,12 @@ class FindAnswer:
 
         answer+=adder
         return answer
+
+    def drink_transform(self, drink):
+        if drink in ["논알콜 푸룻 마가리타","프레쉬 에이드","하리토스","페리에","소프트 드링크","커피","홍차", "콜라","사이다","환타"]:
+            return "무알콜 드링크"
+        if drink in ["레드 와인","화이트 와인"]:
+            return "와인"
+        if drink in ["생맥주","멕시코맥주","크래프트맥주"]:
+            return "맥주"
+        return drink
