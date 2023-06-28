@@ -120,6 +120,16 @@ def analyse_sent(sent):
     result= [sent,intention, keywords, tags]
     print(result)
 
+def intent_match(result, intent):
+    labels = {0: "인사", 1: "메뉴안내", 2: "주문", 3: "예약", 4: "기타", 5: "메뉴추천", 6: "매장문의", 7: "이벤트정보", 8: "매장정보"}
+    if result==labels[intent]:
+        return False
+    elif result in ["주문", "주문취소", "메뉴추천"] and labels[intent]=="주문":
+        return False
+    else:
+        return True
+
+
 def intent_test():
     train_file = "total_train_data_new.csv"
     data = pd.read_csv('models/intent/'+train_file, delimiter=',')
@@ -136,7 +146,8 @@ def intent_test():
     for i in range(data.shape[0]):
         
         result=intent.predict_class(queries[i])
-        if result!=labels[intents[i]]:
+        #if result!=labels[intents[i]]:
+        if intent_match(result, intents[i]):
             cnt+=1
             pos = p.pos(queries[i])
             keywords = p.get_keywords(pos, without_tag=True)

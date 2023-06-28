@@ -123,6 +123,7 @@ def to_client(conn, addr, params):
                     search_done=0
                     for word, tag in ner_predicts:
                         if word in intent.submenu:
+                            word=f.drink_transform(word)
                             for cat in intent.menu.values():
                                 for exactmenu in cat:
                                     if exactmenu['name']==word and search_done==0:
