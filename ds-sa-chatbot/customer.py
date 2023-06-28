@@ -18,6 +18,7 @@ class Customer:
                     self.price[food["name"]]=int(food["price"])
 
     def put_item(self, item, num):
+        item=self.drink_transform(item)
         if item not in self.bag:
             self.bag.append(item)
         
@@ -27,6 +28,7 @@ class Customer:
             self.numbag[item]=num
     
     def cancel_item(self, item):
+        item=self.drink_transform(item)
         self.bag.remove(item)
         self.numbag[item]=0
 
@@ -53,3 +55,12 @@ class Customer:
         for reserv in self.reservation:
             if reserv[0]==time:
                 self.reservation.remove(reserv)
+
+    def drink_transform(self, drink):
+        if drink in ["논알콜 푸룻 마가리타","프레쉬 에이드","하리토스","페리에","소프트 드링크","커피","홍차", "콜라","사이다","환타"]:
+            return "무알콜 드링크"
+        if drink in ["레드 와인","화이트 와인"]:
+            return "와인"
+        if drink in ["생맥주","멕시코맥주","크래프트맥주"]:
+            return "맥주"
+        return drink
