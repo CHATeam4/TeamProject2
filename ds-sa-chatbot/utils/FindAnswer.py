@@ -232,3 +232,33 @@ class FindAnswer:
         if drink in ["생맥주","멕시코맥주","크래프트맥주"]:
             return "맥주"
         return drink
+
+    def phonenum_validity(self, num):
+        num=re.sub(r"[-]", "", num)
+        if num.startswith("010") and len(num)==11:
+            return True
+        else:
+            return False
+    
+    def time_validity(self, num):
+        mini=11
+        maxi=21
+        if mini <= num <= maxi:
+            return True
+        else:
+            return False
+    
+    def person_validity(self, num):
+        mini=1
+        maxi=10
+        if mini <= num <= maxi:
+            return True
+        else:
+            return False
+
+    def name_validity(self, name):
+        tmp=re.sub(r"[^가-힣]", "", name)
+        if len(name)==0 or len(tmp)!=len(name):
+            return False
+        else:
+            return True
