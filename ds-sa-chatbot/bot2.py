@@ -42,7 +42,6 @@ def to_client(conn, addr, params):
             print('클라이언트 연결 끊어짐')
             exit(0)
 
-
         # json 데이터로 변환
         recv_json_data = json.loads(read.decode())
         print("데이터 수신 : ", recv_json_data)
@@ -143,7 +142,10 @@ def to_client(conn, addr, params):
             if answer_code=='3':
                 answer, mod_menu=f.show_menu(tagword, intent.menu)
                 #아래 코드는 디스플레이가 마련되면 지울것
-                answer=f.display_menu(mod_menu, answer)
+                if tagword!='전체':
+                    answer=f.display_menu(mod_menu, answer)
+                else:
+                    answer_code='31'
 
             if answer_code=='1':
                 if tagword in ['취소', '못하', '미루', '미루워', '캔슬', '조정']:
@@ -160,10 +162,17 @@ def to_client(conn, addr, params):
                     answer=''
                     time, person= f.timeandperson(ner_predicts)
                     if time!=None and person!=None:
-                        answer=str(time)+'시 '+str(person)+'명 예약합니다.'
-                        cust.reserv(time, person)
+                        if f.time_validity(time) and f.person_validity(person):
+                            answer=str(time)+'시 '+str(person)+'명 예약합니다.'
+                            cust.reserv(time, person)
+                        else:
+                            if f.time_validity(time)==False:
+                                answer='매장 운영 시간을 다시 확인해주십시오.'
+                            elif f.person_validity(person)==False:
+                                answer='예약 인원을 다시 확인해주십시오. 최대 예약 가능 인원은 10명입니다.'
                     else:
                         answer="예약창으로 이동합니다. 나머지 정보를 채워주십시오."
+                        answer_code='11'
                 if len(cust.reservation)!=0:
                     answer+=f"\n예약 현황:"
                     for reserv in cust.reservation:
